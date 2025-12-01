@@ -1,8 +1,9 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import useAuth from '../../Hooks/useAuth'
-import { Link } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import SocialLogin from './SocialLogin'
+import axios from 'axios'
 
 const Register = () => {
     const {
@@ -11,14 +12,48 @@ const Register = () => {
         formState: { errors },
     } = useForm()
 
-    const { creatUser } = useAuth()
+    const { creatUser, updateUserProfile } = useAuth()
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleRegisterSubmit = (data) => {
-        console.log(data)
+        console.log(data.photo[0])
+        const profileImg = data.photo[0];
 
         creatUser(data.email, data.password)
             .then(result => {
                 console.log(result.user)
+
+                // 1.Store the image in form data
+                const formData = new FormData();
+                formData.append('image', profileImg);
+
+                // send the photo to store and get the url
+                const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_HOST_KEY}`
+
+                axios.post(image_API_URL, formData)
+                    .then(res => {
+                        console.log(res.data)
+
+                        // update user profile to firebase
+                        const userProfile = {
+                            displayName: data.name,
+                            photoURL: res.data.data.url
+                        }
+                        updateUserProfile(userProfile)
+                            .then(() => {
+                                console.log('user profile updated done')
+                                navigate(location?.state || "/")
+
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+
             })
             .catch(error => {
                 console.log(error)
@@ -39,6 +74,13 @@ const Register = () => {
                         <input type="text" className="input" placeholder="Your Name" {...register("name", { required: true })} />
                         {errors.name?.type === "required" && (
                             <p className='text-red-500'>name is required</p>
+                        )}
+
+                        {/* Photo */}
+                        <label className="label">Photo</label>
+                        <input type="file" className="file-input" placeholder="Your Photo" {...register("photo", { required: true })} />
+                        {errors.photo?.type === "required" && (
+                            <p className='text-red-500'>photo is required</p>
                         )}
 
                         {/* Email */}
@@ -69,7 +111,10 @@ const Register = () => {
 
                         <button className="btn bg-primary mt-4">register</button>
                     </fieldset>
-                    <p>Already have an account? <Link to="/login" className='text-xl font-bold text-secondary underline'>Login</Link></p>
+                    <p>Already have an account? <Link
+                        state={location.state}
+                        to="/login"
+                        className='text-xl font-bold text-secondary underline'>Login</Link></p>
 
                     <SocialLogin></SocialLogin>
 

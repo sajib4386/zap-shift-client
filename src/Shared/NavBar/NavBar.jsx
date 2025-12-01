@@ -20,6 +20,7 @@ const NavBar = () => {
         <li><NavLink to="">services</NavLink></li>
         <li><NavLink to="/coverage">Coverage</NavLink></li>
         <li><NavLink to="">About Us</NavLink></li>
+        <li><NavLink to="/send-percel">Send Percel</NavLink></li>
         <li><NavLink to="">Pricing</NavLink></li>
         <li><NavLink to="">Blog</NavLink></li>
         <li><NavLink to="">Contact</NavLink></li>
@@ -49,7 +50,7 @@ const NavBar = () => {
                     user ? <button onClick={handleSignOut} className='btn'>Sign Up</button>
                         : <Link to="/login" className='btn'>Sign In</Link>
                 }
-                <Link to="/" className='btn bg-primary'>Be a rider</Link>
+                <Link to="/rider" className='btn bg-primary'>Be a rider</Link>
                 <span className='bg-black p-3 rounded-full'><FaArrowRight className='text-primary -rotate-45' /></span>
             </div>
         </div>
