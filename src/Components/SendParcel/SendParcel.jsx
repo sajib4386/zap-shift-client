@@ -2,9 +2,21 @@ import React from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useAuth from "../../Hooks/useAuth";
 
-const SendPercel = () => {
-  const { register, handleSubmit, control, formState: { errors } } = useForm();
+
+const SendParcel = () => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    //  formState: { errors }
+  } = useForm();
+
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
   const servicecenters = useLoaderData();
   const regionsDuplicate = servicecenters.map(c => c.region)
   const regions = [...new Set(regionsDuplicate)];
@@ -18,7 +30,7 @@ const SendPercel = () => {
     return districts;
   }
 
-  const handleSendPercel = data => {
+  const handleSendParcel = data => {
     console.log("Form Data:", data);
 
     // 🛒 Pricing Structure
@@ -49,6 +61,8 @@ const SendPercel = () => {
         cost = minCharge + extraCharge;
       }
     }
+
+    data.cost = cost;
     console.log("Final Cost:", cost);
     Swal.fire({
       title: "Agree With the Cost",
@@ -60,6 +74,11 @@ const SendPercel = () => {
       confirmButtonText: "I agree!"
     }).then((result) => {
       if (result.isConfirmed) {
+
+        axiosSecure.post("/parcels", data)
+          .then(res => {
+            console.log('after saving parcel', res.data)
+          })
         // Swal.fire({
         //   title: "Deleted!",
         //   text: "Your file has been deleted.",
@@ -81,7 +100,7 @@ const SendPercel = () => {
 
       <div className="border-b mb-8"></div>
 
-      <form onSubmit={handleSubmit(handleSendPercel)}>
+      <form onSubmit={handleSubmit(handleSendParcel)}>
 
         {/* PARCEL TYPE */}
         <div className="flex items-center gap-8 mb-10">
@@ -149,6 +168,18 @@ const SendPercel = () => {
                   type="text"
                   placeholder="Enter Sender Name"
                   {...register("senderName")}
+                  defaultValue={user?.displayName}
+                  className="input input-bordered h-12 text-sm"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">Sender Email</label>
+                <input
+                  type="text"
+                  placeholder="Enter Sender Email"
+                  {...register("senderEmail")}
+                  defaultValue={user?.email}
                   className="input input-bordered h-12 text-sm"
                 />
               </div>
@@ -227,6 +258,16 @@ const SendPercel = () => {
               </div>
 
               <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">Receiver Email</label>
+                <input
+                  type="text"
+                  placeholder="Enter Receiver Email"
+                  {...register("receiverEmail")}
+                  className="input input-bordered h-12 text-sm"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium">Receiver Address</label>
                 <input
                   type="text"
@@ -296,4 +337,4 @@ const SendPercel = () => {
   );
 };
 
-export default SendPercel;
+export default SendParcel;
