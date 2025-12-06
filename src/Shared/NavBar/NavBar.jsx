@@ -59,7 +59,7 @@ const NavBar = () => {
                     user ? <button onClick={handleSignOut} className='btn'>Sign Out</button>
                         : <Link to="/login" className='btn'>Sign In</Link>
                 }
-                <Link to="/rider" className='btn bg-primary'>Be a rider</Link>
+                <Link to="/riders" className='btn bg-primary'>Be a rider</Link>
                 <span className='bg-black p-3 rounded-full'><FaArrowRight className='text-primary -rotate-45' /></span>
             </div>
         </div>
