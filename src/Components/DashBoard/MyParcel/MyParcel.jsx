@@ -6,6 +6,7 @@ import { MdPageview } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import Swal from 'sweetalert2';
+import { Link } from 'react-router';
 
 const MyParcel = () => {
 
@@ -50,6 +51,18 @@ const MyParcel = () => {
     });
   }
 
+  const handlePayment = async (parcel) => {
+    const paymentInfo = {
+      cost: parcel.cost,
+      parcelId: parcel._id,
+      senderEmail: parcel.senderEmail,
+      parcelName: parcel.parcelName
+    }
+    const res = await axiosSecure.post('/create-checkout-session', paymentInfo)
+    console.log(res.data)
+    window.location.assign(res.data.url);
+  }
+
   return (
     <div>
       <h3 className='text-3xl font-bold text-center m-5'>MyParcel {parcels.length}</h3>
@@ -62,6 +75,7 @@ const MyParcel = () => {
               <th>Name</th>
               <th>Cost</th>
               <th>Payment Status</th>
+              <th>Delivery Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -71,7 +85,24 @@ const MyParcel = () => {
                 <th>{index + 1}</th>
                 <td>{parcel.parcelName}</td>
                 <td>{parcel.cost}</td>
-                <td>Blue</td>
+                <td>
+                  {
+                    parcel.paymentStatus === 'paid' ?
+                      <span className='btn btn-sm btn-secondary text-primary'>Paid</span> :
+
+                      // OLD
+                      // <Link to={`/dashboard/payment/${parcel._id}`}>
+                      //   <button className='btn btn-sm btn-primary text-black'>
+                      //     Pay
+                      //   </button>
+                      // </Link>
+
+                      <button onClick={() => handlePayment(parcel)} className='btn btn-sm btn-primary text-black'>
+                        Pay
+                      </button>
+                  }
+                </td>
+                <td>{parcel.deliveryStatus}</td>
                 <td className='space-x-2'>
                   <button className="btn btn-square">
                     <MdPageview />
