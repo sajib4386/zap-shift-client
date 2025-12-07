@@ -40,6 +40,7 @@ const ApproveRiders = () => {
     const handleRejection = rider => {
         updateRiderStatus(rider, 'rejected')
     }
+
     return (
         <div>
             <h3 className='text-3xl font-bold text-center m-5'>Riders Pending Approval: {riders.length}</h3>
@@ -52,7 +53,8 @@ const ApproveRiders = () => {
                             <th>Name</th>
                             <th>Email</th>
                             <th>District</th>
-                            <th>Status</th>
+                            <th>Application Status</th>
+                            <th>Work Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -81,8 +83,8 @@ const ApproveRiders = () => {
                                                 rejected
                                             </span>
                                         )}
-
                                     </td>
+                                    <td>{rider.workStatus}</td>
                                     <td className='space-x-2'>
                                         <button
                                             onClick={() => handleApproval(rider)}
