@@ -11,7 +11,6 @@ const SendParcel = () => {
     register,
     handleSubmit,
     control,
-    //  formState: { errors }
   } = useForm();
 
   const { user } = useAuth();
