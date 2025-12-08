@@ -75,6 +75,7 @@ const MyParcel = () => {
               <th>Name</th>
               <th>Cost</th>
               <th>Payment Status</th>
+              <th>TrackingID</th>
               <th>Delivery Status</th>
               <th>Actions</th>
             </tr>
@@ -101,6 +102,11 @@ const MyParcel = () => {
                         Pay
                       </button>
                   }
+                </td>
+                <td>
+                  <Link to={`/parcel-track/${parcel.trackingId}`}>
+                    {parcel.trackingId}
+                  </Link>
                 </td>
                 <td>{parcel.deliveryStatus}</td>
                 <td className='space-x-2'>

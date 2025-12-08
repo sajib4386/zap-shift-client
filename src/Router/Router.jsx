@@ -18,6 +18,10 @@ import ApproveRiders from "../Components/DashBoard/ApproveRiders/ApproveRiders";
 import UsersManagement from "../Components/DashBoard/UsersManagement/UsersManagement";
 import AdminRoute from "./AdminRoute";
 import AssignRiders from "../Components/DashBoard/AssignRiders/AssignRiders";
+import AssignDeliveries from "../Components/DashBoard/AssignDeliveries/AssignDeliveries";
+import RiderRoute from "./RiderRoute";
+import CompletedDeliveries from "../Components/DashBoard/CompletedDeliveries/CompletedDeliveries";
+import ParcelTrack from "../Components/ParcelTrack/ParcelTrack";
 
 export const router = createBrowserRouter([
     {
@@ -43,6 +47,10 @@ export const router = createBrowserRouter([
                 path: "/coverage",
                 Component: Coverage,
                 loader: () => fetch('/servicecenters.json')
+            },
+            {
+                path: "/parcel-track/:trackingId",
+                Component: ParcelTrack
             }
         ]
     },
@@ -84,6 +92,19 @@ export const router = createBrowserRouter([
                 path: "/dashboard/payment-history",
                 Component: PaymentHistory
             },
+
+            // Rider Only
+            {
+                path: "/dashboard/assign-deliveries",
+                element: <RiderRoute><AssignDeliveries></AssignDeliveries></RiderRoute>
+            },
+            {
+                path: "/dashboard/completed-deliveries",
+                element: <RiderRoute><CompletedDeliveries></CompletedDeliveries></RiderRoute>
+            },
+
+
+            // Admin Only
             {
                 path: "/dashboard/approve-riders",
                 element: <AdminRoute><ApproveRiders></ApproveRiders></AdminRoute>

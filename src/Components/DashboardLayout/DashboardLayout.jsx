@@ -1,9 +1,10 @@
 import React from 'react'
 import { CiDeliveryTruck } from 'react-icons/ci'
-import { FaMotorcycle, FaRegCreditCard, FaUsers } from 'react-icons/fa'
+import { FaClipboardList, FaMotorcycle, FaRegCreditCard, FaUsers } from 'react-icons/fa'
 import { MdDirectionsBike } from 'react-icons/md'
 import { Link, NavLink, Outlet } from 'react-router'
 import useRole from '../../Hooks/useRole'
+import { SiGoogletasks } from 'react-icons/si'
 
 const DashboardLayout = () => {
     const { role } = useRole();
@@ -50,6 +51,24 @@ const DashboardLayout = () => {
                                 <span className="is-drawer-close:hidden">Payment History</span></NavLink>
                         </li>
 
+                        {/* Rider Only */}
+                        {
+                            role === 'rider' && <>
+                                <li>
+                                    <NavLink to="/dashboard/assign-deliveries" className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Assign Deliveries">
+                                        < FaClipboardList></FaClipboardList>
+                                        <span className="is-drawer-close:hidden">Assign Deliveries</span></NavLink>
+                                </li>
+
+                                <li>
+                                    <NavLink to="/dashboard/completed-deliveries" className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Completed Deliveries">
+                                        <SiGoogletasks />
+                                        <span className="is-drawer-close:hidden">Completed Deliveries</span></NavLink>
+                                </li>
+                            </>
+                        }
+
+                        {/* Admin Only */}
                         {
                             role === 'Admin' && <>
                                 <li>
